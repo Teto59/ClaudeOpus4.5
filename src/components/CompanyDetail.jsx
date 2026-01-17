@@ -10,6 +10,13 @@ const DEFAULT_STATUSES = [
   { id: 'rejected', name: '不合格', badge: 'badge-rejected' },
 ];
 
+const APPLICATION_ROUTES = [
+  { id: 'rikunabi', name: 'リクナビ', color: '#e60012' },
+  { id: 'mynavi', name: 'マイナビ', color: '#00a0e9' },
+  { id: 'mypage', name: '企業マイページ', color: '#4ade80' },
+  { id: 'other', name: 'その他', color: '#9ca3af' },
+];
+
 function CompanyDetail({ company, onBack, onUpdate, onDelete, customStatuses, onAddCustomStatus }) {
   const [editedCompany, setEditedCompany] = useState({ ...company });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -87,11 +94,44 @@ function CompanyDetail({ company, onBack, onUpdate, onDelete, customStatuses, on
 
           <div className="form-group">
             <label>締切 / 面接日</label>
-            <input
-              type="date"
-              value={editedCompany.deadline || ''}
-              onChange={(e) => setEditedCompany({ ...editedCompany, deadline: e.target.value })}
-            />
+            <div className="datetime-input-group">
+              <input
+                type="date"
+                value={editedCompany.deadline || ''}
+                onChange={(e) => setEditedCompany({ ...editedCompany, deadline: e.target.value })}
+              />
+              <input
+                type="time"
+                value={editedCompany.deadlineTime || ''}
+                onChange={(e) => setEditedCompany({ ...editedCompany, deadlineTime: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>応募経路</label>
+            <select
+              value={editedCompany.applicationRoute || 'mypage'}
+              onChange={(e) => setEditedCompany({ ...editedCompany, applicationRoute: e.target.value })}
+            >
+              {APPLICATION_ROUTES.map((route) => (
+                <option key={route.id} value={route.id}>
+                  {route.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={editedCompany.starred || false}
+                onChange={(e) => setEditedCompany({ ...editedCompany, starred: e.target.checked })}
+              />
+              <span className="star-checkbox">★</span>
+              注目企業としてマーク
+            </label>
           </div>
 
           <div className="form-group">

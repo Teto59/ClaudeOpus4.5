@@ -23,3 +23,70 @@
   gap: var(--spacing-sm);
   margin-top: var(--spacing-lg);
 }
+
+/* Star styles */
+.th-star {
+  width: 32px;
+}
+
+.star-cell {
+  width: 32px;
+  text-align: center;
+}
+
+.star-icon {
+  color: #fbbf24;
+  font-size: 1.1rem;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+.starred-row {
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.08) 0%, transparent 50%);
+}
+
+.starred-row:hover {
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.15) 0%, var(--bg-hover) 50%);
+}
+
+/* Route badge */
+.route-badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Datetime input group */
+.datetime-input-group {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.datetime-input-group input[type="date"] {
+  flex: 1;
+}
+
+.datetime-input-group input[type="time"] {
+  width: 120px;
+}
+
+/* Checkbox label */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+}
+
+.star-checkbox {
+  color: #fbbf24;
+  font-size: 1.2rem;
+}
