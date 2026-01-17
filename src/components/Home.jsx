@@ -66,10 +66,7 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
   };
 
   const sortedCompanies = [...companies].sort((a, b) => {
-    // 注目企業を優先
-    if (a.starred && !b.starred) return -1;
-    if (!a.starred && b.starred) return 1;
-    // 次に締切でソート
+    // 締切でソート
     if (!a.deadline && !b.deadline) return 0;
     if (!a.deadline) return 1;
     if (!b.deadline) return -1;
@@ -115,7 +112,6 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
           <table className="table">
             <thead>
               <tr>
-                <th className="th-star"></th>
                 <th>企業名</th>
                 <th>経路</th>
                 <th>ステータス</th>
@@ -127,11 +123,10 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
                 const statusInfo = getStatusInfo(company.status);
                 const routeInfo = getRouteInfo(company.applicationRoute);
                 return (
-                  <tr key={company.id} onClick={() => onSelectCompany(company)} className={company.starred ? 'starred-row' : ''}>
-                    <td className="star-cell">
-                      {company.starred && <span className="star-icon">★</span>}
+                  <tr key={company.id} onClick={() => onSelectCompany(company)}>
+                    <td className={`company-name ${company.starred ? 'company-starred' : ''}`}>
+                      {company.name}
                     </td>
-                    <td className="company-name">{company.name}</td>
                     <td>
                       <span className="route-badge" style={{ backgroundColor: routeInfo.color + '25', color: routeInfo.color }}>
                         {routeInfo.name}

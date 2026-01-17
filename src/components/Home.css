@@ -17,35 +17,18 @@
   font-weight: 500;
 }
 
+/* 注目企業の名前を目立たせる */
+.company-starred {
+  color: #f59e0b;
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: var(--spacing-sm);
   margin-top: var(--spacing-lg);
-}
-
-/* Star styles */
-.th-star {
-  width: 32px;
-}
-
-.star-cell {
-  width: 32px;
-  text-align: center;
-}
-
-.star-icon {
-  color: #fbbf24;
-  font-size: 1.1rem;
-  text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
-}
-
-.starred-row {
-  background: linear-gradient(90deg, rgba(251, 191, 36, 0.08) 0%, transparent 50%);
-}
-
-.starred-row:hover {
-  background: linear-gradient(90deg, rgba(251, 191, 36, 0.15) 0%, var(--bg-hover) 50%);
 }
 
 /* Route badge */
