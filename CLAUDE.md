@@ -60,3 +60,7 @@ npm run preview      # ビルド成果物プレビュー
 - **状態管理**: App.jsxでグローバル状態を管理し、propsで子コンポーネントに渡す
 - **永続化**: useLocalStorageフックでローカルストレージに自動保存
 - **ページ遷移**: currentPage状態による条件付きレンダリング（ルーターなし）
+
+## Frontend aesthetics rules
+
+- @.claude/rules/frontend-aesthetics.md
