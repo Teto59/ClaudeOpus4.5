@@ -1,46 +1,66 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このファイルはClaude Codeがこのリポジトリで作業する際のガイダンスを提供します。
 
-## Project Overview
+## プロジェクト概要
 
-JobTracker (就活管理アプリ) - A Japanese-language job hunting management web application built with React 19 and Vite. All user-facing text is in Japanese.
+**JobTracker** - 就活管理用Webアプリケーション（SPA/PWA）
 
-## Commands
+企業の応募状況、選考ステータス、面接日程、メモなどを一元管理できるアプリケーション。すべてのデータはブラウザのローカルストレージに保存され、外部送信されない。
 
-```bash
-npm install          # Install dependencies
-npm run dev          # Start development server
-npm run build        # Build for production (outputs to ./dist)
-npm run lint         # Run ESLint
-npm run preview      # Preview production build locally
+## 技術スタック
+
+- **フレームワーク**: React 19.2.0
+- **ビルドツール**: Vite 7.2.4
+- **言語**: JavaScript (JSX)
+- **モジュール形式**: ESM (ES Modules)
+- **Linter**: ESLint 9.x (フラット設定)
+- **ホスティング**: GitHub Pages
+
+## ディレクトリ構造
+
+```
+src/
+├── components/          # UIコンポーネント
+│   ├── Home.jsx        # 企業一覧画面
+│   ├── CompanyDetail.jsx # 企業詳細・編集画面
+│   └── Notes.jsx       # メモ帳画面
+├── hooks/              # カスタムフック
+│   └── useLocalStorage.js # ローカルストレージ永続化
+├── App.jsx             # ルートコンポーネント・ページ遷移管理
+├── main.jsx            # エントリーポイント
+└── *.css               # スタイルシート
 ```
 
-## Architecture
+## 開発コマンド
 
-### Tech Stack
-- React 19 + Vite 7
-- No router library - simple state-based page switching in `App.jsx`
-- Data persistence via browser localStorage (no backend)
+```bash
+npm install          # 依存関係インストール
+npm run dev          # 開発サーバー起動 (ホットリロード)
+npm run build        # 本番ビルド (dist/へ出力)
+npm run lint         # ESLint静的解析
+npm run preview      # ビルド成果物プレビュー
+```
 
-### Data Flow
-- `App.jsx` manages all application state and passes props down to child components
-- `useLocalStorage` hook (`src/hooks/useLocalStorage.js`) handles localStorage read/write with JSON serialization
-- Three localStorage keys prefixed with `jobtracker_`: companies, statuses, notes
+## デプロイ
 
-### Components
-- `Home.jsx` - Company list with deadline sorting and status badges
-- `CompanyDetail.jsx` - Single company edit view with memo field
-- `Notes.jsx` - General-purpose notes (自己PR, ガクチカ templates)
+- mainブランチへのpushでGitHub Actionsが自動デプロイを実行
+- ビルド成果物はGitHub Pagesにデプロイされる
+- base pathは `/ClaudeOpus4.5/` に設定済み
 
-### Key Conventions
-- Default statuses are defined in both `Home.jsx` and `CompanyDetail.jsx` (ES/Webテスト → 面接 stages → 内定/不合格)
-- Custom statuses use `custom_${timestamp}` ID format
-- Entity IDs use `Date.now().toString()` format
+## コーディング規約
 
-## Deployment
+- React Hooksルールに従う（eslint-plugin-react-hooks）
+- コンポーネントは関数コンポーネントで記述
+- 状態管理はuseStateとカスタムフック（useLocalStorage）を使用
+- CSSはコンポーネントごとに分離（Component.css）
 
-GitHub Pages deployment via `.github/workflows/deploy.yml`:
-- Triggers on push to `main` branch
-- Uses Node 20
-- Base path is `/ClaudeOpus4.5/` (configured in `vite.config.js`)
+## アーキテクチャ
+
+- **状態管理**: App.jsxでグローバル状態を管理し、propsで子コンポーネントに渡す
+- **永続化**: useLocalStorageフックでローカルストレージに自動保存
+- **ページ遷移**: currentPage状態による条件付きレンダリング（ルーターなし）
+
+## Frontend aesthetics rules
+
+- @.claude/rules/frontend-aesthetics.md

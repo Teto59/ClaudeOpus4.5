@@ -10,12 +10,22 @@ const DEFAULT_STATUSES = [
   { id: 'rejected', name: '不合格', badge: 'badge-rejected' },
 ];
 
+const APPLICATION_ROUTES = [
+  { id: 'rikunabi', name: 'リクナビ', color: '#e60012' },
+  { id: 'mynavi', name: 'マイナビ', color: '#00a0e9' },
+  { id: 'mypage', name: '企業マイページ', color: '#4ade80' },
+  { id: 'other', name: 'その他', color: '#9ca3af' },
+];
+
 function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCompany, setNewCompany] = useState({
     name: '',
     status: 'es',
     deadline: '',
+    deadlineTime: '',
+    starred: false,
+    applicationRoute: 'mypage',
   });
 
   const allStatuses = [
@@ -39,15 +49,27 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
     return 'deadline-normal';
   };
 
-  const formatDate = (dateStr) => {
+  const formatDateTime = (dateStr, timeStr) => {
     if (!dateStr) return '-';
     const date = new Date(dateStr);
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    return `${month}/${day}`;
+    const dateDisplay = `${month}/${day}`;
+    if (timeStr) {
+      return `${dateDisplay} ${timeStr}`;
+    }
+    return dateDisplay;
+  };
+
+  const getRouteInfo = (routeId) => {
+    return APPLICATION_ROUTES.find(r => r.id === routeId) || APPLICATION_ROUTES[3];
   };
 
   const sortedCompanies = [...companies].sort((a, b) => {
+    // 注目企業を優先
+    if (a.starred && !b.starred) return -1;
+    if (!a.starred && b.starred) return 1;
+    // 次に締切でソート
     if (!a.deadline && !b.deadline) return 0;
     if (!a.deadline) return 1;
     if (!b.deadline) return -1;
@@ -62,10 +84,13 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
       name: newCompany.name.trim(),
       status: newCompany.status,
       deadline: newCompany.deadline,
+      deadlineTime: newCompany.deadlineTime,
+      starred: newCompany.starred,
+      applicationRoute: newCompany.applicationRoute,
       memo: '',
     });
 
-    setNewCompany({ name: '', status: 'es', deadline: '' });
+    setNewCompany({ name: '', status: 'es', deadline: '', deadlineTime: '', starred: false, applicationRoute: 'mypage' });
     setShowAddModal(false);
   };
 
@@ -90,7 +115,9 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
           <table className="table">
             <thead>
               <tr>
+                <th className="th-star"></th>
                 <th>企業名</th>
+                <th>経路</th>
                 <th>ステータス</th>
                 <th>締切 / 日程</th>
               </tr>
@@ -98,16 +125,25 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
             <tbody>
               {sortedCompanies.map((company) => {
                 const statusInfo = getStatusInfo(company.status);
+                const routeInfo = getRouteInfo(company.applicationRoute);
                 return (
-                  <tr key={company.id} onClick={() => onSelectCompany(company)}>
+                  <tr key={company.id} onClick={() => onSelectCompany(company)} className={company.starred ? 'starred-row' : ''}>
+                    <td className="star-cell">
+                      {company.starred && <span className="star-icon">★</span>}
+                    </td>
                     <td className="company-name">{company.name}</td>
+                    <td>
+                      <span className="route-badge" style={{ backgroundColor: routeInfo.color + '25', color: routeInfo.color }}>
+                        {routeInfo.name}
+                      </span>
+                    </td>
                     <td>
                       <span className={`badge ${statusInfo.badge}`}>
                         {statusInfo.name}
                       </span>
                     </td>
                     <td className={getDeadlineClass(company.deadline)}>
-                      {formatDate(company.deadline)}
+                      {formatDateTime(company.deadline, company.deadlineTime)}
                     </td>
                   </tr>
                 );
@@ -154,11 +190,45 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
 
             <div className="form-group">
               <label>締切 / 面接日</label>
-              <input
-                type="date"
-                value={newCompany.deadline}
-                onChange={(e) => setNewCompany({ ...newCompany, deadline: e.target.value })}
-              />
+              <div className="datetime-input-group">
+                <input
+                  type="date"
+                  value={newCompany.deadline}
+                  onChange={(e) => setNewCompany({ ...newCompany, deadline: e.target.value })}
+                />
+                <input
+                  type="time"
+                  value={newCompany.deadlineTime}
+                  onChange={(e) => setNewCompany({ ...newCompany, deadlineTime: e.target.value })}
+                  placeholder="時刻（任意）"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>応募経路</label>
+              <select
+                value={newCompany.applicationRoute}
+                onChange={(e) => setNewCompany({ ...newCompany, applicationRoute: e.target.value })}
+              >
+                {APPLICATION_ROUTES.map((route) => (
+                  <option key={route.id} value={route.id}>
+                    {route.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={newCompany.starred}
+                  onChange={(e) => setNewCompany({ ...newCompany, starred: e.target.checked })}
+                />
+                <span className="star-checkbox">★</span>
+                注目企業としてマーク
+              </label>
             </div>
 
             <div className="modal-actions">
