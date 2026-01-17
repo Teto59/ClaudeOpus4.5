@@ -94,7 +94,10 @@ function Home({ companies, onSelectCompany, onAddCompany, customStatuses }) {
   return (
     <div className="home">
       <div className="home-header">
-        <h1>JobTracker</h1>
+        <div className="header-left">
+          <h1>JobTracker</h1>
+          <span className="company-count">{companies.length}社</span>
+        </div>
         <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
           + 企業追加
         </button>
